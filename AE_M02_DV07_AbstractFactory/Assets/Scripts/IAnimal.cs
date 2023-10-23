@@ -95,7 +95,7 @@ public class GardenSnake : IAnimal {
 public class Caterpillar : IAnimal {
     public Sprite AddImage()
     {
-        return Resources.Load<Sprite>("Catapillar");
+        return Resources.Load<Sprite>("Caterpillar");
     }
 }
 public class LiterallyNothing : IAnimal {
