@@ -5,79 +5,146 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
 
 public class Client : MonoBehaviour
 {
-    public int NumberOfWheels = 0;
-    public bool Engine =  false;
-    public int Passengers = 0;
-    public bool Cargo = false;
-    public TextMeshProUGUI stuff;
-    public TextMeshProUGUI wheelCount;
-    public TextMeshProUGUI passengernNumber;
+    //public int NumberOfWheels = 0;
+    //public bool Engine =  false;
+    //public int Passengers = 0;
+    //public bool Cargo = false;
+
+    public int NumberOfLegs;
+    public bool FarmAnimal;
+    public bool WildAnimal;
+    public bool Pet;
+    public bool HasNoFur;
+    public int HasFur;
+
+    public Image image;
+
+    public TextMeshProUGUI typeOfAnimalText;
+    public TextMeshProUGUI legNumberText;
+
+    public TextMeshProUGUI isFarmAnimalText;
+
+
+    //public TextMeshProUGUI stuff;
+    //public TextMeshProUGUI wheelCount;
+    //public TextMeshProUGUI passengernNumber;
+
+    //public TextMeshProUGUI legNumberDropdown;
 
     void Start()
     {
-        //NumberOfWheels = Mathf.Max(NumberOfWheels, 1); //the max is the number the user inputs, if the user doesn't input, 1 wheel will be selected
-        //Passengers = Mathf.Max(Passengers, 1);
+        NumberOfLegs = Mathf.Max(NumberOfLegs);
+
+        AnimalRequirements requirements = new AnimalRequirements();
+        requirements.FarmAnimal = FarmAnimal;
+        requirements.WildAnimal = WildAnimal;
+        requirements.Pet = Pet;
+        requirements.NumberOfLegs = NumberOfLegs;
+        requirements.HasFur = HasFur;
+        //requirements.Cargo = Cargo;
         //Engine = Cargo;
 
-        //VehicleRequirements requirements = new VehicleRequirements();
-        //requirements.NumberOfWheels = NumberOfWheels;
-        //requirements.Engine = Engine;
-        //requirements.Passengers = Passengers;
+        IAnimal v = GetAnimal(requirements);
+        Debug.Log((v)); //set to string later???
 
-        //IVehicle v = GetVehicle(requirements);
-        //Debug.Log((v)); //set to string later???
+        typeOfAnimalText.text = v.ToString();
+        legNumberText.text = "Legs: " + NumberOfLegs.ToString();
+        isFarmAnimalText.text = "Is Farm Animal? " + FarmAnimal.ToString();
+        image.sprite = v.AddImage();
     }
 
     void Update()
     {
-        NumberOfWheels = Mathf.Max(NumberOfWheels, 1); //the max is the number the user inputs, if the user doesn't input, 1 wheel will be selected
-        Passengers = Mathf.Max(Passengers, 1);
 
-        VehicleRequirements requirements = new VehicleRequirements();
-        requirements.NumberOfWheels = NumberOfWheels;
-        requirements.Engine = Engine;
-        requirements.Passengers = Passengers;
-        requirements.Cargo = Cargo;
+    }
+
+    public void Spawn()
+    {
+        //NumberOfWheels = Mathf.Max(NumberOfWheels, 1); //the max is the number the user inputs, if the user doesn't input, 1 wheel will be selected
+
+        AnimalRequirements requirements = new AnimalRequirements();
+        requirements.FarmAnimal = FarmAnimal;
+        requirements.WildAnimal = WildAnimal;
+        requirements.Pet = Pet;
+        requirements.NumberOfLegs = NumberOfLegs;
+        requirements.HasFur = HasFur;
+        //requirements.Cargo = Cargo;
         //Engine = Cargo;
 
-        IVehicle v = GetVehicle(requirements);
+        IAnimal v = GetAnimal(requirements);
         Debug.Log((v)); //set to string later???
-        stuff.text = v.ToString();
-        wheelCount.text = "Wheels: " + NumberOfWheels.ToString();
-        passengernNumber.text = "Passengers: " + Passengers.ToString();
+
+        typeOfAnimalText.text = v.ToString();
+        legNumberText.text = "Legs: " + NumberOfLegs.ToString();
+        isFarmAnimalText.text = "Is Farm Animal? " + FarmAnimal.ToString();
+        image.sprite = v.AddImage();
+
+        //:)
+
+        //passengernNumber.text = "Passengers: " + Passengers.ToString();
     }
 
-    public void PassengersButton()
+    //DROPDOWN MENU
+     public void NumberOfLegsData(int legNumber)
     {
-        Passengers++;
-    }
-
-    public void NumberOfWheelsButton()
-    {
-        NumberOfWheels++;
-    }
-
-    public void EngineButton()
-    {
-        if (Engine)
+        if (legNumber == 0)
         {
-            Engine = false;
+            Debug.Log(legNumber);
+            NumberOfLegs = 0;
         }
-        else
-            Engine = true;
+
+        if (legNumber == 1) //why isn't the int changind
+        {
+            Debug.Log(legNumber + "HELLOOOOO");
+            NumberOfLegs = 2;
+        }
+
+        if (legNumber == 2)
+        {
+            NumberOfLegs = 4;
+        }
     }
 
-    public void CargoButton()
+    public void AnimalTypeData(int animalType)
     {
-        if (Cargo)
+        if (animalType == 0)
         {
-            Cargo = false;
+            HasFur = 0;
         }
-        else
-            Cargo = true;
+
+        if (animalType == 1)
+        {
+            HasFur = 1;
+        }
+
+        if(animalType == 2)
+        {
+            HasFur = 2;
+        }
+    }
+
+    public void FarmAnimalData(int FANum)
+    {
+        if(FANum == 0)
+        {
+            FarmAnimal = false;
+            Pet = false;
+        }
+        if (FANum == 1)
+        {
+            FarmAnimal = true;
+            Pet = false;
+        }
+
+        if (FANum == 2)
+        {
+            Pet = true;
+            FarmAnimal = true;
+        }
     }
 
     public void Reset()
@@ -85,9 +152,9 @@ public class Client : MonoBehaviour
         SceneManager.LoadScene("SampleScene");
     }
 
-    private static IVehicle GetVehicle(VehicleRequirements requirements)
+    private static IAnimal GetAnimal(AnimalRequirements requirements)
     {
-        VehicleFactory factory = new VehicleFactory(requirements);
+        AnimalFactory factory = new AnimalFactory(requirements);
         return factory.Create();
     }
 }
